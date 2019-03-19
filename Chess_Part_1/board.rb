@@ -1,27 +1,27 @@
 require_relative "nullpiece"
+require "colorize"
 require "byebug"
+
 class Board
   attr_accessor :rows
 
   def initialize 
     @rows = Array.new(8) {Array.new(8)}
-    @sentinel = NullPiece.new()
+    @sentinel = NullPiece.instance
     fill_board
   end
 
   def fill_board
     self.rows.each_with_index do |row, i|
-      # debugger
       row.each_with_index do |square, j|
         if [0,1,6,7].include?(i)
           if [0,1].include?(i)
-            # debugger
             row[j] = Piece.new(:black, self, [i,j])
           elsif [6,7].include?(i)
             row[j] = Piece.new(:white, self, [i,j])
           end 
         else  
-          row[j] = NullPiece.new
+          row[j] = @sentinel
         end  
       end  
     end 
@@ -36,7 +36,7 @@ class Board
       else
         if self[end_pos].is_a?(NullPiece)
           self[end_pos] = current_piece
-          self[start_pos] = NullPiece.new()
+          self[start_pos] = @sentinel
         else
           # puts "this space is taken"
           raise UserInputError, "this space is taken"
@@ -56,9 +56,15 @@ class Board
     x, y = pos 
     self.row[x][y] = val 
   end 
+
+  def valid_pos?(pos)
+    # if (pos[0] >= 0 && pos[0] < 8) && (pos[1] >= 0 && pos[1] < 8)
+    if board[[pos]].is_a?(NullPiece) && board[[pos]].color != board[[pos]].color 
+      return true
+    else
+      return false
+    end
+  end
 end
 
 class UserInputError < StandardError; end
-
-board = Board.new
-p board.move_piece([2,2],[6,7])
