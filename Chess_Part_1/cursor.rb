@@ -94,8 +94,9 @@ class Cursor
     new_y = (@cursor_pos[1] + diff[1])%8
     new_pos = [new_x, new_y]
 
-    if @board.valid_pos?(new_pos)
-      @cursor_pos = new_pos
-    end
+    # if @board.valid_pos?(new_pos)
+    #   @cursor_pos = new_pos
+    # end
+    
   end
 end

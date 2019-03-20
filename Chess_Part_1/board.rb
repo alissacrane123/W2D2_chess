@@ -1,6 +1,9 @@
 require_relative "nullpiece"
+require_relative "rook"
+require_relative "bishop"
 require "colorize"
 require "byebug"
+
 
 class Board
   attr_accessor :rows
@@ -16,9 +19,9 @@ class Board
       row.each_with_index do |square, j|
         if [0,1,6,7].include?(i)
           if [0,1].include?(i)
-            row[j] = Piece.new(:black, self, [i,j])
+            row[j] = Bishop.new(:black, self, [i,j])
           elsif [6,7].include?(i)
-            row[j] = Piece.new(:white, self, [i,j])
+            row[j] = Bishop.new(:white, self, [i,j])
           end 
         else  
           row[j] = @sentinel
@@ -57,9 +60,17 @@ class Board
     self.row[x][y] = val 
   end 
 
-  def valid_pos?(pos)
+  def on_board?(new_pos)
+    x, y = new_pos
+    if !(0..7).include?(x) || !(0..7).include?(y)
+      return false 
+    end 
+    true 
+  end 
+
+  def valid_pos?(start_pos,new_pos)
     # if (pos[0] >= 0 && pos[0] < 8) && (pos[1] >= 0 && pos[1] < 8)
-    if board[[pos]].is_a?(NullPiece) && board[[pos]].color != board[[pos]].color 
+    if self.on_board?(new_pos) && (self[new_pos].is_a?(NullPiece) || self[start_pos].color != self[new_pos].color) 
       return true
     else
       return false
@@ -67,4 +78,9 @@ class Board
   end
 end
 
+
+
 class UserInputError < StandardError; end
+
+board = Board.new
+p board[[1,1]].horizontal_dirs
