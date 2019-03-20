@@ -1,6 +1,7 @@
 require_relative "nullpiece"
 require_relative "rook"
 require_relative "bishop"
+require_relative "queen"
 require "colorize"
 require "byebug"
 
@@ -19,9 +20,9 @@ class Board
       row.each_with_index do |square, j|
         if [0,1,6,7].include?(i)
           if [0,1].include?(i)
-            row[j] = Bishop.new(:black, self, [i,j])
+            row[j] = Queen.new(:black, self, [i,j])
           elsif [6,7].include?(i)
-            row[j] = Bishop.new(:white, self, [i,j])
+            row[j] = Queen.new(:white, self, [i,j])
           end 
         else  
           row[j] = @sentinel
